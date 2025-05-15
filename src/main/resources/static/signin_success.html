@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HealthMate - User Home</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2f4f4f;
+      padding: 10px 30px;
+    }
+
+    .navbar .brand {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.3s ease;
+    }
+
+    .navbar .nav-links a:hover {
+      opacity: 0.7;
+    }
+
+    .main-content {
+      padding: 60px;
+      text-align: center;
+    }
+
+    .main-content h1 {
+      color: #2f4f4f;
+    }
+
+    .main-content h2 {
+      color: #4682b4;
+    }
+
+    .feedback-btn {
+      background-color: #4682b4;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 16px;
+      margin-top: 20px;
+      display: inline-block;
+    }
+
+    .feedback-btn:hover {
+      background-color: #5a9bd2;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="user-home.html" class="brand">HealthMate</a>
+    <div class="nav-links">
+      <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+      <a href="message.html"><i class="fas fa-credit-card"></i> Subscription</a>
+      <a href="reportpage.html"><i class="fas fa-chart-line"></i> Reports</a>
+      <a href="pdf_fetch.html"><i class="fas fa-bell"></i> Notification</a>
+      <a href="" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <h1 id="helloUser">HELLO</h1>
+    <h2>WELCOME TO</h2>
+    <h1>HEALTH MATE</h1>
+    <!-- Feedback Button -->
+    <a href="feedback.html" class="feedback-btn">Give Feedback</a>
+  </div>
+
+  <script>
+    // Fetch name from session and update UI
+    fetch("http://localhost:7469/api/signin/fetch", {
+      method: "GET",
+      credentials: "include"
+    })
+    .then(response => {
+      if (!response.ok) {
+        window.location.href = "user-login.html";
+      }
+      return response.json(); // expecting JSON with { name, email, ... }
+    })
+    .then(data => {
+      document.getElementById("helloUser").innerText = "HELLO " + data.name.toUpperCase();
+    })
+    .catch(error => {
+      console.log("Error fetching name:", error);
+      window.location.href = "user-login.html";
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - HealthMate</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #57c6a9, #3b9ec5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h2 {
+      color: white;
+      font-size: 32px;
+      text-shadow: 1px 1px 2px black;
+      margin-bottom: 5px;
+    }
+
+    h3 {
+      color: yellow;
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 25px;
+      text-shadow: 1px 1px black;
+    }
+
+    .login-box {
+      background-color: #f4fefe;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+      width: 400px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      color: darkblue;
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #f2f2f2;
+      font-size: 15px;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      margin: 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .login-btn { background-color: green; color: white; }
+    .reset-btn { background-color: #333; color: white; }
+    .forgot-btn { background-color: orange; color: white; }
+    .create-btn { background-color: #007bff; color: white; }
+
+    #msg {
+      color: red;
+      margin-top: 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .admin-login {
+      margin-top: 25px;
+      color: deeppink;
+      font-weight: bold;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .admin-login i {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Hey there!</h2>
+    <h3>Login to unlock your dashboard</h3>
+
+    <div class="login-box">
+      <form id="signinForm">
+        <label>Enter Your Email:</label>
+        <input type="email" id="email" required />
+
+        <label>Enter Your Password:</label>
+        <input type="password" id="password" required />
+
+        <div class="btn-row">
+          <button type="submit" class="btn login-btn">Login</button>
+          <button type="reset" class="btn reset-btn">Reset</button>
+        </div>
+
+		<!-- Inside your second .btn-row -->
+		<div class="btn-row">
+		  <a href="forgotpassword.html" class="btn forgot-btn">Forget Password</a>
+		  <a href="signup.html" class="btn create-btn">Create Account</a>
+		</div>
+
+		<!-- Replace the .admin-login div with this -->
+		<div class="admin-login">
+		  <a href="adminsignup.html" style="color: deeppink; text-decoration: none;">
+		    <i class="fas fa-user"></i>
+		    <span>ADMIN LOGIN</span>
+		  </a>
+		</div>
+
+
+  <script>
+    document.getElementById("signinForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      fetch("/api/signin/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        credentials: "include"
+      })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = "signin_success.html";
+          } else {
+            document.getElementById("msg").innerText = "Invalid email or password";
+          }
+        })
+        .catch(error => {
+          document.getElementById("msg").innerText = "Error: " + error;
+        });
+    });
+  </script>
+
+</body>
+</html>

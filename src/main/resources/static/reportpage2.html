@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HealthMate - Upload/Download</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+	  background: linear-gradient(to bottom left, #66ff99 0%, #99ccff 63%);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2f4f4f;
+      padding: 10px 30px;
+    }
+
+    .navbar .brand {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.3s ease;
+    }
+
+    .navbar .nav-links a:hover {
+      opacity: 0.7;
+    }
+
+    .main-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 60px);
+    }
+
+    .box-container {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .box {
+      width: 220px;
+      background-color: white;
+      border: 2px solid #4682b4;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-decoration: none;
+      overflow: hidden;
+    }
+
+    .box img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .box p {
+      margin: 10px;
+      font-size: 14px;
+      color: #2f4f4f;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .nav-links a.active {
+      color: #03a9f4;
+    }
+
+    .nav-links a.active i {
+      color: #03a9f4;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header/Navbar -->
+  <div class="navbar">
+    <a href="user-home.html" class="brand">HealthMate</a>
+    <div class="nav-links">
+      <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+      <a href="user-subscription.html"><i class="fas fa-credit-card"></i> Subscription</a>
+      <a href="reportpage.html" class="active"><i class="fas fa-chart-line"></i> Reports</a>
+      <a href="pdf_fetch.html"><i class="fas fa-bell"></i> Notification</a>
+      <a href="user-login.html" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <!-- Boxes with Images and Text -->
+  <div class="main-content">
+    <div class="box-container">
+      <a href="pdf_fetch.html" class="box">
+        <img src="images/upload.jpg" alt="Upload Report">
+        <p>Download your saved medical reports anytime, anywhere.</p>
+      </a>
+      <a href="#" class="box">
+        <img src="images/food.jpg" alt="Download Report">
+        <p>Food and Medicine Recommendation .</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

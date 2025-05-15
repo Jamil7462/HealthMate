@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f7fc;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 240px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .sidebar h2 {
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .top-bar h1 {
+            font-size: 28px;
+            color: #333;
+        }
+        .top-bar button {
+            background-color: #e74c3c;
+            border: none;
+            padding: 10px 18px;
+            color: white;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .top-bar button:hover {
+            background-color: #c0392b;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .card h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .card p {
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+	<div class="sidebar">
+	    <h2>Admin Panel</h2>
+	    <a href="#">🏠 Dashboard</a>
+	    <a href="sender.html">👥 Manage Users</a>
+	    <a href="pdf_fetch.html">📊 Reports</a>
+	    <a href="feedbackview.html">📬 View Feedbacks</a>
+	    <a href="#">⚙️ Settings</a>
+	</div>
+
+
+<div class="main-content">
+    <div class="top-bar">
+        <h1>Welcome, Admin</h1>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <a href="Alluserview.html" style="text-decoration: none; color: inherit;">
+                <h3>Total Users</h3>
+                <p id="userCount">Loading...</p>
+            </a>
+        </div>
+        <div class="card">
+            <h3>Active Sessions</h3>
+            <p>58 Currently Logged In</p>
+        </div>
+        <div class="card">
+            <h3>Pending Requests</h3>
+            <p>14 Awaiting Approval</p>
+        </div>
+        <div class="card">
+            <h3>System Status</h3>
+            <p>All Systems Operational</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function logout() {
+        window.location.href = "Adminlogin.html";
+    }
+
+    fetch("http://localhost:7469/public/usercount")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("userCount").textContent = data.count + " Registered";
+        })
+        .catch(error => {
+            console.error("Error fetching user count:", error);
+            document.getElementById("userCount").textContent = "Error loading";
+        });
+</script>
+
+</body>
+</html>

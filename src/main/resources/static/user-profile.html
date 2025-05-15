@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Profile - HealthMate</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2f4f4f;
+      padding: 10px 30px;
+    }
+
+    .navbar .brand {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.3s ease;
+    }
+
+    .navbar .nav-links a:hover {
+      opacity: 0.7;
+    }
+
+    .nav-links a.active {
+      color: #03a9f4;
+    }
+
+    .nav-links a.active i {
+      color: #03a9f4;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+      margin: 60px auto;
+    }
+
+    h2 {
+      color: #1e1e1e;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+      margin-top: 10px;
+      display: block;
+      text-align: left;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      font-size: 14px;
+      color: #333;
+    }
+
+    input:focus {
+      border-color: #2f4f4f;
+      background-color: #fff;
+      outline: none;
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: #2f4f4f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #3a6a6f;
+    }
+
+    .readonly {
+      background-color: #f9f9f9;
+      cursor: not-allowed;
+    }
+
+    #msg {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #4caf50;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="user-home.html" class="brand">HealthMate</a>
+    <div class="nav-links">
+      <a href="user-profile.html" class="active"><i class="fas fa-user"></i> Profile</a>
+      <a href="user-subscription.html"><i class="fas fa-credit-card"></i> Subscription</a>
+      <a href="reportpage.html"><i class="fas fa-chart-line"></i> Reports</a>
+      <a href="pdf_fetch.html"><i class="fas fa-bell"></i> Notification</a>
+      <a href="user-login.html" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <!-- User Profile Form -->
+  <div class="container">
+    <h2>User Profile</h2>
+    <form id="profileForm">
+      <label>Email (Read-only)</label>
+      <input type="email" id="email" class="readonly" readonly />
+
+      <label>Name</label>
+      <input type="text" id="name" required />
+
+      <label>Contact</label>
+      <input type="text" id="contact" required />
+
+      <label>Address</label>
+      <input type="text" id="address" required />
+
+      <button type="submit">Update Profile</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    // Fetch user details from session
+    fetch("http://localhost:7469/api/signin/fetch", {
+      method: "GET",
+      credentials: "include"
+    })
+    .then(response => {
+      if (!response.ok) {
+        window.location.href = "user-login.html";
+      }
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById("email").value = data.email;
+      document.getElementById("name").value = data.name;
+      document.getElementById("contact").value = data.contact;
+      document.getElementById("address").value = data.address;
+    })
+    .catch(error => {
+      console.log("Error fetching data:", error);
+    });
+
+    // Update user profile
+    document.getElementById("profileForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const contact = document.getElementById("contact").value;
+      const address = document.getElementById("address").value;
+
+      fetch("http://localhost:7469/apiuser/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({ name, contact, address })
+      })
+      .then(response => response.text())
+      .then(msg => {
+        document.getElementById("msg").innerText = msg;
+      })
+      .catch(error => {
+        document.getElementById("msg").innerText = "Update failed!";
+      });
+    });
+  </script>
+</body>
+</html>

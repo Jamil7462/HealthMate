@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Feedback Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    form {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+
+    textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .stars {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+
+    .star {
+      font-size: 30px;
+      cursor: pointer;
+      color: #ccc;
+    }
+
+    .star.selected {
+      color: gold;
+    }
+
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="feedbackForm">
+    <h2>Give Your Feedback</h2>
+
+    <textarea id="message" placeholder="Your Feedback" rows="4" required></textarea>
+
+    <div class="stars" id="starRating">
+      <span class="star" data-value="1">&#9733;</span>
+      <span class="star" data-value="2">&#9733;</span>
+      <span class="star" data-value="3">&#9733;</span>
+      <span class="star" data-value="4">&#9733;</span>
+      <span class="star" data-value="5">&#9733;</span>
+    </div>
+
+    <input type="hidden" id="ratting" required>
+
+    <button type="submit">Submit Feedback</button>
+  </form>
+
+  <script>
+    // Star rating logic
+    const stars = document.querySelectorAll(".star");
+    const rattingInput = document.getElementById("ratting");
+
+    stars.forEach(star => {
+      star.addEventListener("click", function () {
+        const value = this.getAttribute("data-value");
+        rattingInput.value = value;
+
+        // Reset all stars
+        stars.forEach(s => s.classList.remove("selected"));
+
+        // Highlight selected stars
+        for (let i = 0; i < value; i++) {
+          stars[i].classList.add("selected");
+        }
+      });
+    });
+
+    // Submit form
+    document.getElementById("feedbackForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const data = {
+        message: document.getElementById("message").value,
+        ratting: document.getElementById("ratting").value
+      };
+
+      if (!data.ratting) {
+        alert("Please select a rating.");
+        return;
+      }
+
+      fetch("http://localhost:7469/feedback/feedbackinsert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.status === 204 || response.ok) {
+          alert("Thank you for your feedback!");
+          document.getElementById("feedbackForm").reset();
+          stars.forEach(s => s.classList.remove("selected"));
+        } else {
+          alert("Failed to send feedback.");
+        }
+      })
+      .catch(err => alert("Error: " + err));
+    });
+  </script>
+
+</body>
+</html>

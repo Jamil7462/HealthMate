@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reset Password</title>
+  <script>
+    function resetPassword() {
+      const newPassword = document.getElementById("newPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (newPassword !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      // Send new password to backend using PUT request
+	  
+	  fetch("http://localhost:7469/forgot/updatepassword?password=..." + encodeURIComponent(newPassword), {
+        method: "PUT",
+        credentials: "include" // very important to send session data
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Password updated successfully!");
+          window.location.href = "signin.html"; // Redirect to login
+        } else {
+          alert("Failed to update password.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred.");
+      });
+    }
+  </script>
+</head>
+<body>
+  <h2>Security Answer Verified!</h2>
+  <p>You can now reset your password.</p>
+
+  <input type="password" id="newPassword" placeholder="Enter New Password"><br><br>
+  <input type="password" id="confirmPassword" placeholder="Confirm New Password"><br><br>
+  <button onclick="resetPassword()">Reset Password</button>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF List and Download</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .pdf-list {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        .pdf-list th, .pdf-list td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .pdf-list th {
+            background-color: #f2f2f2;
+        }
+        .btn-download {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-download:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Available PDFs</h1>
+
+    <!-- Table to display PDFs -->
+    <table class="pdf-list" id="pdfList">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated here by JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Fetch PDF metadata from the API
+        fetch('http://localhost:7469/pdf/list')  // Update this URL to your API endpoint
+            .then(response => response.json())
+            .then(data => {
+                const pdfListTable = document.getElementById("pdfList").getElementsByTagName('tbody')[0];
+                data.forEach(pdf => {
+                    const row = pdfListTable.insertRow();
+                    row.innerHTML = `
+                        <td>${pdf.id}</td>
+                        <td>${pdf.description}</td>
+                        <td><button class="btn-download" onclick="downloadPdf(${pdf.id})">Download</button></td>
+                    `;
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching PDFs:", error);
+                alert("Error fetching PDF list.");
+            });
+
+        // Function to handle PDF download
+        function downloadPdf(id) {
+            fetch(`http://localhost:7469/pdf/download/${id}`)  // Update this URL to your download endpoint
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob();  // Get PDF as a blob
+                    } else {
+                        alert("Failed to download the PDF.");
+                    }
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'download.pdf';  // Filename for the downloaded PDF
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error("Error downloading PDF:", error);
+                    alert("Error downloading the PDF.");
+                });
+        }
+    </script>
+    
+</body>
+</html>

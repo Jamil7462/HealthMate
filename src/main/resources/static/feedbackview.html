@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>All Feedback</h2>
+
+    <button onclick="loadFeedback()">Load Feedback</button>
+
+    <table id="feedbackTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Ratting</th>
+            </tr>
+        </thead>
+        <tbody id="feedbackBody">
+            <!-- Feedback rows will appear here -->
+        </tbody>
+    </table>
+
+    <script>
+        function loadFeedback() {
+            fetch('http://localhost:7469/api/feedback/feedback')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("No content or error occurred.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const table = document.getElementById('feedbackTable');
+                    const tbody = document.getElementById('feedbackBody');
+                    tbody.innerHTML = ''; // clear old data
+
+                    data.forEach(item => {
+                        const row = `<tr>
+                            <td>${item.id}</td>
+                            <td>${item.email}</td>
+                            <td>${item.message}</td>
+                            <td>${item.ratting}</td>
+                        </tr>`;
+                        tbody.innerHTML += row;
+                    });
+
+                    table.style.display = 'table';
+                })
+                .catch(error => {
+                    alert("No feedback found or server error.");
+                    console.error(error);
+                });
+        }
+    </script>
+
+</body>
+</html>

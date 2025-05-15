@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+        }
+        .login-form {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-form">
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="id">Admin ID</label>
+            <input type="text" id="id" name="id" required />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit">Login</button>
+        <div class="message" id="msg"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const id = document.getElementById("id").value;
+        const password = document.getElementById("password").value;
+
+        fetch("http://localhost:7469/api/login/logins", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id, password })
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error("Invalid login");
+            }
+        })
+        .then(data => {
+            document.getElementById("msg").innerText = data;
+            document.getElementById("msg").className = "message";
+            if (data.toLowerCase().includes("success")) {
+                window.location.href = "admin_dashbord.html"; // Redirect after successful login
+            }
+        })
+        .catch(error => {
+            document.getElementById("msg").innerText = error.message;
+            document.getElementById("msg").className = "message error";
+        });
+    });
+</script>
+
+</body>
+</html>

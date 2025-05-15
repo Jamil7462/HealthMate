@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HealthMate - Upload PDF</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2f4f4f;
+      padding: 10px 30px;
+    }
+
+    .navbar .brand {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.3s ease;
+    }
+
+    .navbar .nav-links a:hover {
+      opacity: 0.7;
+    }
+
+    .nav-links a.active {
+      color: #03a9f4;
+    }
+
+    .nav-links a.active i {
+      color: #03a9f4;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 60px);
+    }
+
+    .upload-box {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      width: 350px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    select, input[type="file"], button {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      background-color: #4682b4;
+      color: white;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #315f7d;
+    }
+  </style>
+  <script>
+    function uploadPDF() {
+      const fileInput = document.getElementById("pdfFile");
+      const descriptionInput = document.getElementById("description");
+
+      const file = fileInput.files[0];
+      const description = descriptionInput.value;
+
+      if (!description) {
+        alert("Please select a description.");
+        return;
+      }
+      if (!file) {
+        alert("Please select a PDF file.");
+        return;
+      }
+      if (file.type !== "application/pdf") {
+        alert("Only PDF files are allowed.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("description", description);
+
+      fetch("http://localhost:7469/pdf/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) return response.json();
+        else throw new Error("Failed to upload");
+      })
+      .then(data => {
+        alert("PDF uploaded successfully with description: " + data.description);
+        document.getElementById("uploadForm").reset();
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Error uploading file.");
+      });
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Header/Navbar -->
+  <div class="navbar">
+    <a href="user-home.html" class="brand">HealthMate</a>
+    <div class="nav-links">
+      <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+      <a href="user-subscription.html"><i class="fas fa-credit-card"></i> Subscription</a>
+      <a href="reportpage.html" class="active"><i class="fas fa-chart-line"></i> Reports</a>
+      <a href="pdf_fetch.html"><i class="fas fa-bell"></i> Notification</a>
+      <a href="user-login.html" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <!-- Upload Form Section -->
+  <div class="container">
+    <div class="upload-box">
+      <form id="uploadForm" onsubmit="event.preventDefault(); uploadPDF();">
+        <label for="description">Select Problem Type:</label>
+        <select id="description" name="description" required>
+          <option value="">-- Select Medical Issue --</option>
+          <option value="Cardiology">Cardiology</option>
+          <option value="Neurology">Neurology</option>
+          <option value="Orthopedics">Orthopedics</option>
+          <option value="Dermatology">Dermatology</option>
+          <option value="ENT">ENT (Ear, Nose, Throat)</option>
+          <option value="Gastroenterology">Gastroenterology</option>
+          <option value="Nephrology">Nephrology</option>
+          <option value="Urology">Urology</option>
+          <option value="Psychiatry">Psychiatry</option>
+          <option value="Gynecology">Gynecology</option>
+          <option value="Pediatrics">Pediatrics</option>
+          <option value="Ophthalmology">Ophthalmology</option>
+          <option value="Dental">Dental</option>
+          <option value="Diabetes">Diabetes</option>
+          <option value="Oncology">Oncology (Cancer)</option>
+          <option value="Infectious Disease">Infectious Disease</option>
+          <option value="Pulmonology">Pulmonology (Lung)</option>
+          <option value="Rheumatology">Rheumatology (Joints)</option>
+          <option value="General Medicine">General Medicine</option>
+          <option value="COVID-19">COVID-19</option>
+        </select>
+
+        <label for="pdfFile">Choose PDF File:</label>
+        <input type="file" id="pdfFile" name="file" accept="application/pdf" required>
+
+        <button type="submit">Upload PDF</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

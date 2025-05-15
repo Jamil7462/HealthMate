@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Signup</title>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+        }
+        .signup-form {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .signup-form h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            color: green;
+        }
+        .signin-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="signup-form">
+    <h2>Admin Signup</h2>
+    <form id="adminForm">
+        <div class="form-group">
+            <label for="id">Admin ID</label>
+            <input type="text" id="id" name="id" required />
+        </div>
+        <div class="form-group">
+            <label for="password">Password (min 6 characters)</label>
+            <input type="password" id="password" name="password" required minlength="6" />
+        </div>
+        <button type="submit">Signup</button>
+        <div class="message" id="msg"></div>
+    </form>
+
+    <!-- Signin link -->
+    <div class="signin-link">
+        <a href="Adminlogin.html">
+            <button type="button">Signin</button>
+        </a>
+    </div>
+</div>
+
+<script>
+    document.getElementById("adminForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const id = document.getElementById("id").value;
+        const password = document.getElementById("password").value;
+
+        fetch("http://localhost:7469/api/insert/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id, password })
+        })
+        .then(response => {
+            if (response.status === 204) {  // 204 No Content indicates success
+                document.getElementById("msg").innerText = "Signup successful!";
+            } else {
+                throw new Error('Signup failed');
+            }
+        })
+        .catch(error => {
+            document.getElementById("msg").innerText = "Error: " + error.message;
+        });
+    });
+</script>
+
+</body>
+</html>

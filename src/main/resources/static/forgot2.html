@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Security Question</title>
+  <script>
+    window.onload = function() {
+      const email = localStorage.getItem("userEmail");
+      if (!email) {
+        alert("No email found. Please go back.");
+        window.location.href = "forgot.html";
+        return;
+      }
+
+      // Security Question fetch
+      fetch("http://localhost:7469/forgot/fetchsecurity")
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById("securityQuestion").innerText = "Security Question: " + data;
+        })
+        .catch(err => alert("Error: " + err));
+    };
+
+    function submitAnswer() {
+      const answer = document.getElementById("answer").value;
+
+      fetch("http://localhost:7469/forgot/answer?answer=" + answer)
+        .then(res => {
+          if (res.ok) {
+            window.location.href = "forgot3.html"; // ✅ On correct answer
+          } else {
+            alert("Incorrect answer. Try again.");
+          }
+        })
+        .catch(err => alert("Error: " + err));
+    }
+  </script>
+</head>
+<body>
+  <h2>Answer Security Question</h2>
+  <p id="securityQuestion">Loading question...</p>
+  <input type="text" id="answer" placeholder="Enter your answer" />
+  <button onclick="submitAnswer()">Submit Answer</button>
+</body>
+</html>

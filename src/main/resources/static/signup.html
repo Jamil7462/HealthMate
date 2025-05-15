@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url("/images/home.gif") no-repeat center center/cover;
+        }
+
+        .form-container {
+            background-color: #ffffffd9;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>User Signup</h2>
+
+    <form id="signupForm">
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <select name="security" required>
+            <option value="">Select Security Question</option>
+            <option value="Your pet name?">Your pet name?</option>
+            <option value="Your favorite food?">Your favorite food?</option>
+        </select>
+        <input type="text" name="answer" placeholder="Security Answer" required />
+        <input type="text" name="contact" placeholder="Contact (10 digits)" required />
+        <input type="text" name="address" placeholder="Address" required />
+        <input type="number" name="age" placeholder="Age" required />
+        <button type="submit">Signup</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const jsonData = {};
+        formData.forEach((value, key) => jsonData[key] = value);
+
+        fetch("/api/insert/insert", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(jsonData)
+        })
+        .then(res => {
+            if (res.status === 204) {
+                alert("Signup successful!");
+                e.target.reset();
+            } else {
+                return res.text().then(text => { throw new Error(text); });
+            }
+        })
+        .catch(err => alert("Error: " + err.message));
+    });
+</script>
+
+</body>
+</html>

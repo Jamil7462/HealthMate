@@ -127,24 +127,29 @@
           <button type="reset" class="btn reset-btn">Reset</button>
         </div>
 
-		<!-- Inside your second .btn-row -->
-		<div class="btn-row">
-		  <a href="forgotpassword.html" class="btn forgot-btn">Forget Password</a>
-		  <a href="signup.html" class="btn create-btn">Create Account</a>
-		</div>
+        <div class="btn-row">
+          <a href="forgotpassword.html" class="btn forgot-btn">Forget Password</a>
+          <a href="signup.html" class="btn create-btn">Create Account</a>
+        </div>
 
-		<!-- Replace the .admin-login div with this -->
-		<div class="admin-login">
-		  <a href="adminsignup.html" style="color: deeppink; text-decoration: none;">
-		    <i class="fas fa-user"></i>
-		    <span>ADMIN LOGIN</span>
-		  </a>
-		</div>
+        <div class="admin-login">
+          <a href="Adminlogin.html" style="color: deeppink; text-decoration: none;">
+            <i class="fas fa-user"></i>
+            <span>ADMIN LOGIN</span>
+          </a>
+        </div>
 
+        <div id="msg"></div>
+
+      </form>
+    </div>
+  </div>
 
   <script>
     document.getElementById("signinForm").addEventListener("submit", function (e) {
       e.preventDefault();
+
+      console.log("Login button clicked");
 
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -155,11 +160,12 @@
         body: JSON.stringify({ email, password }),
         credentials: "include"
       })
-        .then(response => {
+        .then(async response => {
           if (response.ok) {
             window.location.href = "signin_success.html";
           } else {
-            document.getElementById("msg").innerText = "Invalid email or password";
+            const errorText = await response.text();
+            document.getElementById("msg").innerText = errorText || "Invalid email or password";
           }
         })
         .catch(error => {

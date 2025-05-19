@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payment Success – HealthMate</title>
+
+  <!-- Icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
+
+    /* ---------- NAVBAR ---------- */
+    .navbar{display:flex;justify-content:space-between;align-items:center;
+            background:#2f4f4f;padding:10px 30px}
+    .navbar .brand{color:#fff;font-size:20px;font-weight:bold;text-decoration:none}
+    .nav-links{display:flex;gap:20px}
+    .nav-links a{color:#fff;text-decoration:none;font-size:14px;display:flex;
+                 align-items:center;gap:6px;transition:opacity .3s}
+    .nav-links a:hover{opacity:.7}
+    .nav-links a.active{color:#03a9f4}
+    .nav-links a.active i{color:#03a9f4}
+
+    /* ---------- PAGE BODY ---------- */
+    body{background:#e0ffe0;display:flex;flex-direction:column;min-height:100vh}
+    main{flex:1;display:flex;align-items:center;justify-content:center}
+
+    .success-box{
+      background:#fff;display:inline-block;padding:40px;border-radius:10px;
+      box-shadow:0 0 10px #aaa;text-align:center}
+    .success-box h1{color:green;margin-bottom:10px}
+    .success-box p{font-size:18px}
+  </style>
+</head>
+<body>
+
+  <!-- ---------- NAVBAR ---------- -->
+  <div class="navbar">
+    <a href="user-home.html" class="brand">HealthMate</a>
+    <div class="nav-links">
+      <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+      <a href="payment.html" class="active"><i class="fas fa-credit-card"></i> Subscription</a>
+      <a href="reportpage.html"><i class="fas fa-chart-line"></i> Reports</a>
+      <a href="contactdoctor.html"><i class="fas fa-bell"></i> Notification</a>
+      <a href="signin.html" onclick="alert('Logged out successfully!')">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- ---------- SUCCESS CARD ---------- -->
+  <main>
+    <div class="success-box">
+      <h1>🎉 Payment Successful!</h1>
+      <p>Thank you for your payment. Your transaction has been completed.</p>
+    </div>
+  </main>
+
+</body>
+</html>

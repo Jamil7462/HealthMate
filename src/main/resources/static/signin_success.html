@@ -82,9 +82,9 @@
     <a href="user-home.html" class="brand">HealthMate</a>
     <div class="nav-links">
       <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
-      <a href="message.html"><i class="fas fa-credit-card"></i> Subscription</a>
+      <a href="payment.html"><i class="fas fa-credit-card"></i> Subscription</a>
       <a href="reportpage.html"><i class="fas fa-chart-line"></i> Reports</a>
-      <a href="pdf_fetch.html"><i class="fas fa-bell"></i> Notification</a>
+      <a href="subscription.html"><i class="fas fa-bell"></i> Notification</a>
       <a href="" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
   </div>
@@ -105,7 +105,7 @@
     })
     .then(response => {
       if (!response.ok) {
-        window.location.href = "user-login.html";
+        window.location.href = "signin.html";
       }
       return response.json(); // expecting JSON with { name, email, ... }
     })

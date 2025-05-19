@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HealthMate – Subscription</title>
+
+  <!-- Icons -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    body{margin:0;font-family:Arial,sans-serif;background:#f0f8ff}
+    /* ---------- NAVBAR ---------- */
+    .navbar{display:flex;justify-content:space-between;align-items:center;
+            background:#2f4f4f;padding:10px 30px}
+    .navbar .brand{color:#fff;font-size:20px;font-weight:bold;text-decoration:none}
+    .nav-links{display:flex;gap:20px}
+    .nav-links a{color:#fff;text-decoration:none;font-size:14px;display:flex;
+                 align-items:center;gap:6px;transition:opacity .3s}
+    .nav-links a:hover{opacity:.7}
+    .nav-links a.active-link{background:#32cd32;padding:6px 10px;border-radius:5px}
+
+    /* ---------- MAIN ---------- */
+    .main-content{padding:60px;text-align:center}
+    h2{color:#2f4f4f}
+
+    form{margin-top:30px;display:inline-block;text-align:left;background:#fff;
+         padding:20px 30px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.1)}
+    label{display:block;margin-bottom:6px;font-weight:bold}
+    input,select{width:100%;padding:8px;margin-bottom:20px;border:1px solid #ccc;
+                 border-radius:4px}
+    button{background:#4682b4;color:#fff;padding:10px 20px;border:none;border-radius:6px;
+           cursor:pointer;font-size:16px}
+    button:hover{background:#5a9bd2}
+  </style>
+</head>
+<body>
+
+  <!-- ---------- NAVBAR ---------- -->
+  <div class="navbar">
+    <a href="user-home.html" class="brand">HealthMate</a>
+    <div class="nav-links">
+      <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+      <a href="payment.html" class="active-link"><i class="fas fa-credit-card"></i> Subscription</a>
+      <a href="reportpage.html"><i class="fas fa-chart-line"></i> Reports</a>
+      <a href="contactdoctor.html"><i class="fas fa-bell"></i> Notification</a>
+      <a href="#" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <!-- ---------- MAIN CONTENT ---------- -->
+  <div class="main-content">
+    <h2>Payment Form</h2>
+    <form id="paymentForm">
+      <label>Payment Amount:</label>
+      <input type="number" id="payment" required>
+
+      <label>Payment Method:</label>
+      <select id="paymentmethod">
+        <option value="UPI">UPI</option>
+        <option value="Card">Card</option>
+        <option value="NetBanking">NetBanking</option>
+      </select>
+
+      <button type="submit">Submit Payment</button>
+    </form>
+  </div>
+
+  <!-- ---------- SCRIPT ---------- -->
+  <script>
+    /* ==== 1)  PAGE‑LOAD SUBSCRIPTION CHECK  ======================= */
+    fetch("http://localhost:7469/api/payment/check_subscription")
+      .then(res => {
+        if (res.ok) {
+          /* Active subscription hai – is form ki ज़रूरत नहीं */
+          window.location.href = "subscription.html";   // ★  subscriber‑only page
+          throw new Error("Already subscribed");        // आगे JS मत चलाओ
+        }
+        /* res.status 400/401 => not subscribed => form दिखने दो */
+      })
+      .catch(err => console.log(err.message));
+
+    /* ==== 2)  FORM SUBMIT (PAYMENT)  ============================== */
+    document.getElementById("paymentForm").addEventListener("submit", e => {
+      e.preventDefault();
+
+      const paymentData = {
+        payment: document.getElementById("payment").value,
+        paymentmethod: document.getElementById("paymentmethod").value
+      };
+
+      fetch("http://localhost:7469/api/payment/payment", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(paymentData)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.text();
+      })
+      .then(() => window.location.href = "paymentsuccess.html")
+      .catch(err => alert("Error: " + err.message));
+    });
+  </script>
+
+</body>
+</html>

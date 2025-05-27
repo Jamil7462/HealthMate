@@ -1,119 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>HealthMate – Subscriber Hub</title>
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
+  <meta charset="UTF-8" />
+  <title>Advanced BMI Calculator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    /* ------- BASIC ------ */
-    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif;}
-    body{background:#f4f7fc;min-height:100vh;display:flex;flex-direction:column;}
-
-    /* ------- NAVBAR ------ */
-    .navbar{display:flex;justify-content:space-between;align-items:center;
-            background:#2f4f4f;padding:12px 32px}
-    .navbar a{color:#fff;text-decoration:none;font-size:14px;display:flex;gap:6px;align-items:center}
-    .navbar .brand{font-size:20px;font-weight:700}
-    .navbar a:hover{opacity:.7}
-
-    /* ------- MAIN CONTENT ------ */
-    .wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:40px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px;max-width:1000px;width:100%}
-
-    .card{
-      background:#fff;border-radius:12px;padding:20px;text-align:center;
-      box-shadow:0 4px 18px rgba(0,0,0,.05);transition:transform .25s,box-shadow .25s
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom left, #66ff99 0%, #99ccff 63%);
     }
-    .card:hover{transform:translateY(-6px);box-shadow:0 8px 22px rgba(0,0,0,.08)}
-    .card img{
-      width:150px;   /* image size bada kiya */
-      height:150px;  /* image size bada kiya */
-      object-fit:cover;
-      margin-bottom:18px;
-      border-radius:50%
-    }
-    .card h3{font-size:18px;color:#2c3e50;margin-bottom:6px}
-    .card p{font-size:14px;color:#555}
 
-    /* ------- FOOTER (optional) ------ */
-    .footer{text-align:center;padding:20px 0;font-size:12px;color:#888}
+    /* Navbar Design */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2f4f4f;
+      padding: 10px 30px;
+    }
+
+    .navbar .brand {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.3s ease;
+    }
+
+    .navbar .nav-links a:hover {
+      opacity: 0.7;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 60px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    input {
+      margin: 6px;
+      padding: 6px;
+      width: 100px;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: #2f4f4f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #4682b4;
+    }
+
+    h3 {
+      margin-top: 20px;
+      color: #2f4f4f;
+    }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
+  <!-- Navbar (Copied Style from HealthMate) -->
   <div class="navbar">
-    <a href="user-home.html" class="brand">HealthMate</a>
-    <div style="display:flex;gap:24px">
+    <a href="#" class="brand">HealthMate</a>
+    <div class="nav-links">
       <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+      <a href="payment.html"><i class="fas fa-credit-card"></i> Subscription</a>
       <a href="reportpage.html"><i class="fas fa-chart-line"></i> Reports</a>
-      <a href="subscription.html"><i class="fas fa-star"></i> Subscriber Hub</a>
-      <a href="#" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <a href="#"><i class="fas fa-bell"></i> Notification</a>
+      <a href="signin.html" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
   </div>
 
-  <!-- MAIN GRID -->
-  <div class="wrapper">
-    <div class="grid">
+  <!-- BMI Calculator Section -->
+  <div class="container">
+    <h2>BMI Calculator with Suggestions</h2>
 
-      <!-- CARD 1 -->
-      <a href="diet.html" class="card">
-        <img src="images/diet.jpg" alt="Diet plans"/>
-        <h3>Diet Plans</h3>
-        <p>Personalised weekly meal charts</p>
-      </a>
+    Age: <input type="number" id="age" value="25"><br>
+    Gender:
+    <input type="radio" name="gender" value="male" checked> Male
+    <input type="radio" name="gender" value="female"> Female<br>
 
-	  <a href="chat.html" class="card">
-	    <img src="images/doctor.jpg" alt="Doctor chat"/>
-	    <h3>Doctor Chat</h3>
-	    <p>1‑to‑1 text or video consults</p>
-	  </a>
+    Height:
+    <input type="number" id="feet" placeholder="feet" value="5"> feet
+    <input type="number" id="inch" placeholder="inches" value="10"> inches<br>
 
+    Weight: <input type="number" id="weight" placeholder="lbs" value="70"><br>
 
-      <!-- CARD 3 -->
-      <a href="workouts.html" class="card">
-        <img src="images/workout.jpg" alt="Workouts"/>
-        <h3>Workout Library</h3>
-        <p>Guided routines 10‑30 min</p>
-      </a>
+    <button onclick="calculateBMI()">Calculate</button>
 
-      <!-- CARD 4 -->
-      <a href="analytics.html" class="card">
-        <img src="images/health.jpg" alt="Analytics"/>
-        <h3>Health Analytics</h3>
-        <p>Sleep, steps &amp; vitals insights</p>
-      </a>
-
-      <!-- CARD 5 -->
-      <a href="meds.html" class="card">
-        <img src="images/track.jpg" alt="Medication tracker"/>
-        <h3>Medication Tracker</h3>
-        <p>Reminders &amp; refill alerts</p>
-      </a>
-
-      <!-- CARD 6 -->
-      <a href="discounts.html" class="card">
-        <img src="images/patner.jpg" alt="Discounts"/>
-        <h3>Partner Discounts</h3>
-        <p>Labs, fitness gear &amp; more</p>
-      </a>
-
-    </div>
+    <h3 id="result"></h3>
   </div>
 
-  <div class="footer">© 2025 HealthMate</div>
-
-  <!-- GATE‑KEEPER SCRIPT -->
   <script>
-    fetch("http://localhost:7469/api/payment/check_subscription")
-      .then(res=>{
-        if(res.ok){return;}              // Active subscriber → stay here
-        // not subscribed → kick to payment page
-        window.location.href="payment.html";
-      })
-      .catch(()=>window.location.href="payment.html");
+    function calculateBMI() {
+      const feet = parseFloat(document.getElementById('feet').value);
+      const inch = parseFloat(document.getElementById('inch').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+      const age = parseInt(document.getElementById('age').value);
+
+      const heightInInches = (feet * 12) + inch;
+      const bmi = (weight / (heightInInches * heightInInches)) * 703;
+
+      const minBMI = 18.5;
+      const maxBMI = 25;
+
+      const minWeight = (minBMI * heightInInches * heightInInches) / 703;
+      const maxWeight = (maxBMI * heightInInches * heightInInches) / 703;
+
+      let status = "";
+      if (bmi < 16) status = "Severe Thinness";
+      else if (bmi < 18.5) status = "Underweight";
+      else if (bmi < 25) status = "Normal";
+      else if (bmi < 30) status = "Overweight";
+      else status = "Obese";
+
+      let suggestion = "";
+      if (weight < minWeight) {
+        suggestion = `You need to gain ${(minWeight - weight).toFixed(1)} lbs to reach minimum healthy BMI.`;
+      } else if (weight > maxWeight) {
+        suggestion = `You need to lose ${(weight - maxWeight).toFixed(1)} lbs to reach maximum healthy BMI.`;
+      } else {
+        suggestion = "Your weight is in the healthy range.";
+      }
+
+      document.getElementById("result").innerHTML = `
+        <b>BMI = ${bmi.toFixed(1)} (${status})</b><br>
+        Healthy weight range for your height: ${minWeight.toFixed(1)} lbs - ${maxWeight.toFixed(1)} lbs<br>
+        ${suggestion}
+      `;
+    }
   </script>
 </body>
 </html>

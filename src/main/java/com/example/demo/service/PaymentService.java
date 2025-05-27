@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,29 +14,31 @@ import com.example.demo.repository.PaymentRepository;
 public class PaymentService {
 
     @Autowired
-    PaymentRepository paymentrepo;
+    private PaymentRepository paymentRepo;
 
-    public void payments(String email, UserPayDTO userpaydto) {
-        UserPayment payment = new UserPayment();
-        payment.setEmail(email);
-        payment.setId(userpaydto.getId());
-        payment.setPayment(userpaydto.getPayment());
-        payment.setPaymentmethod(userpaydto.getPaymentmethod());
+    /* ---- create payment ---- */
+    public void savePayment(String email, UserPayDTO dto) {
 
-        // expiryDate: DTO से अगर आया हो तो use करो, नहीं तो 1 महीने बाद सेट कर दो
-        if (userpaydto.getExpiryDate() != null) {
-            payment.setExpiryDate(userpaydto.getExpiryDate());
-        } else {
-            payment.setExpiryDate(LocalDate.now().plusMonths(1));  // default expiry 1 month from now
-        }
+        UserPayment p = new UserPayment();
+        p.setEmail(email);
+        p.setPayment(dto.getPayment());
+        p.setPaymentmethod(dto.getPaymentmethod());
+        p.setToday(LocalDate.now());
 
-        paymentrepo.save(payment);
+        // expiry – DTO में आये तो use करें, वरना 1 महीना default
+        p.setExpiryDate(dto.getExpiryDate() != null ? dto.getExpiryDate(): LocalDate.now().plusMonths(1));
 
-        System.out.println("Payment saved with expiryDate: " + payment.getExpiryDate());
+        paymentRepo.save(p);
     }
 
+    /* ---- active? ---- */
     public boolean hasActiveSubscription(String email) {
-        LocalDate today = LocalDate.now();
-        return !paymentrepo.findByEmailAndExpiryDateAfter(email, today).isEmpty();
+        return !paymentRepo.findByEmailAndExpiryDateAfter(email, LocalDate.now()).isEmpty();
+    }
+
+    /* ---- latest details for UI ---- */
+    public Optional<UserPayment> getLatestPayment(String email) {
+        return paymentRepo.findTopByEmailOrderByExpiryDateDesc(email);
+
     }
 }

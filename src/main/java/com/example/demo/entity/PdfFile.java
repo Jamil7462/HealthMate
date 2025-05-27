@@ -9,6 +9,17 @@ public class PdfFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Column(name="useremail",nullable =false)
+    private String email;
 
     @Column(name = "description", nullable = false)
     private String description;

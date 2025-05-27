@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.dto.PdfFileDTO;
 import com.example.demo.service.PdfFileService;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +18,13 @@ public class PdfFileController {
     private PdfFileService service;
 
     @PostMapping("/upload")
-    public ResponseEntity<PdfFileDTO> uploadPdf(@RequestParam("description") String description, @RequestParam("file") MultipartFile file)
+    public ResponseEntity<PdfFileDTO> uploadPdf(@RequestParam("description") String description, @RequestParam("file") MultipartFile file,HttpSession session)
     {
         try 
         {
-            PdfFileDTO dto = service.savePdf(description, file);
+        	String email =(String) session.getAttribute("useremail");
+        	session.setAttribute("dis",description);
+            PdfFileDTO dto = service.savePdf(email,description, file);
             return ResponseEntity.ok(dto);
         }
         catch (Exception e)

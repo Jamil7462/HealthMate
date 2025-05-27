@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Health Solutions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        #solutionsList {
+            margin-top: 20px;
+        }
+        .solution {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
+        .disease {
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff;
+        }
+        .foodtext, .medicinetext {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Health Solutions for Your Diseases</h1>
+
+<div id="solutionsList">Loading solutions...</div>
+
+<script>
+    // Function to fetch solutions from API
+    async function fetchSolutions() {
+        try {
+            const response = await fetch('/api/health/solutions', {
+                method: 'GET',
+                credentials: 'include' // send cookies/session
+            });
+
+            if (response.status === 401) {
+                document.getElementById('solutionsList').innerHTML = 'Unauthorized! Please login.';
+                return;
+            }
+
+            if (!response.ok) {
+                document.getElementById('solutionsList').innerHTML = 'Error fetching solutions.';
+                return;
+            }
+
+            const solutions = await response.json();
+
+            if (solutions.length === 0) {
+                document.getElementById('solutionsList').innerHTML = 'No solutions found for your diseases.';
+                return;
+            }
+
+            // Build HTML to show solutions
+            let html = '';
+            solutions.forEach(solution => {
+                html += `
+                    <div class="solution">
+                        <div class="disease">${solution.disease}</div>
+                        <div class="foodtext"><strong>Food Advice:</strong> ${solution.foodtext}</div>
+                        <div class="medicinetext"><strong>Medicine Advice:</strong> ${solution.medicinetext}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('solutionsList').innerHTML = html;
+
+        } catch (error) {
+            console.error('Fetch error:', error);
+            document.getElementById('solutionsList').innerHTML = 'Failed to load solutions.';
+        }
+    }
+
+    // Call on page load
+    fetchSolutions();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Disease Description Form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 30px;
+    }
+    /* Navbar CSS same as new header */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2c3e50;
+      padding: 10px 30px;
+      margin: -30px -30px 30px -30px;
+    }
+    .navbar .brand {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .navbar .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    .navbar .nav-links a:hover {
+      background-color: #34495e;
+    }
+    .navbar .nav-links a.active-link {
+      background-color: #32cd32;
+    }
+    .container {
+      width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .upload-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .success {
+      color: green;
+      margin-top: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+	<!-- Navbar -->
+	 <div class="navbar">
+	   <a href="#" class="brand">HealthMate Admin</a>
+	   <div class="nav-links">
+	     <a href="#" class="active-link">🏠 Dashboard</a>
+	     <a href="Alluserview.html">👥 Manage Users</a>
+	     <a href="diseaseinfo.html">🧬 Disease Panel</a> <!-- ✅ Added Disease Panel -->
+	     <a href="pdf_fetch.html">📊 Reports</a>
+	     <a href="feedbackview.html">📬 View Feedbacks</a>
+	     <a href="#">⚙️ Settings</a>
+	     <a href="#" onclick="logout()">🚪 Logout</a>
+	   </div>
+	 </div>
+
+  <div class="container">
+    <div class="upload-box">
+      <h2>Enter Disease Description</h2>
+      <form id="uploadForm" onsubmit="event.preventDefault(); uploadData();">
+        <label for="description">Select Problem Type:</label>
+        <select id="description" name="description" required>
+          <option value="">-- Select Medical Issue --</option>
+          <option value="Cardiology">Cardiology</option>
+          <option value="Neurology">Neurology</option>
+          <option value="Orthopedics">Orthopedics</option>
+          <option value="Dermatology">Dermatology</option>
+          <option value="ENT">ENT (Ear, Nose, Throat)</option>
+          <option value="Gastroenterology">Gastroenterology</option>
+          <option value="Nephrology">Nephrology</option>
+          <option value="Urology">Urology</option>
+          <option value="Psychiatry">Psychiatry</option>
+          <option value="Gynecology">Gynecology</option>
+          <option value="Pediatrics">Pediatrics</option>
+          <option value="Ophthalmology">Ophthalmology</option>
+          <option value="Dental">Dental</option>
+          <option value="Diabetes">Diabetes</option>
+          <option value="Oncology">Oncology (Cancer)</option>
+          <option value="Infectious Disease">Infectious Disease</option>
+          <option value="Pulmonology">Pulmonology (Lung)</option>
+          <option value="Rheumatology">Rheumatology (Joints)</option>
+          <option value="General Medicine">General Medicine</option>
+          <option value="COVID-19">COVID-19</option>
+        </select>
+
+        <label for="food">Food Description:</label>
+        <textarea id="food" name="food" rows="3" placeholder="Enter food-related advice..." required></textarea>
+
+        <label for="medicine">Medicine Description:</label>
+        <textarea id="medicine" name="medicine" rows="3" placeholder="Enter medicine-related advice..." required></textarea>
+
+        <button type="submit">Submit</button>
+        <div class="success" id="successMsg"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+      window.location.href = "Adminlogin.html";
+    }
+
+    function uploadData() {
+      const data = {
+        disease: document.getElementById("description").value,
+        foodtext: document.getElementById("food").value,
+        medicinetext: document.getElementById("medicine").value
+      };
+
+      fetch("http://localhost:7469/api/dis/description", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          document.getElementById("successMsg").innerText = "Data submitted successfully!";
+          document.getElementById("uploadForm").reset();
+        } else {
+          document.getElementById("successMsg").innerText = "Submission failed!";
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        document.getElementById("successMsg").innerText = "Error occurred!";
+      });
+    }
+  </script>
+</body>
+</html>

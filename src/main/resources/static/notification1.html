@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Send Message</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #eefdfd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 400px;
+      border: 2px solid #b366ff;
+    }
+    .box h2 {
+      color: #0000cc;
+      text-align: center;
+    }
+    .box p {
+      color: #d0006f;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background: #006666;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Send Message 📬</h2>
+    <p>Sending to: <span id="userEmail">Loading...</span></p>
+    <textarea id="messageInput" placeholder="Type your message here..."></textarea>
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    // ✅ STEP 1: URL se id lo aur sessionStorage me daal do
+    const urlParams = new URLSearchParams(window.location.search);
+    const idFromURL = urlParams.get('id');
+    if (idFromURL) {
+      sessionStorage.setItem("targetUserId", idFromURL);
+    }
+
+    // ✅ STEP 2: sessionStorage se ID lo
+    const userId = sessionStorage.getItem("targetUserId");
+
+    let currentEmail = null;
+
+    // ✅ STEP 3: backend se email fetch karo
+    if (userId) {
+      fetch(`/api/getemail/${userId}`)
+        .then(res => {
+          if (!res.ok) throw new Error("Email fetch failed");
+          return res.text();
+        })
+        .then(email => {
+          document.getElementById('userEmail').innerText = email;
+          currentEmail = email;
+        })
+        .catch(err => {
+          document.getElementById('userEmail').innerText = "Error fetching email";
+          console.error(err);
+        });
+    } else {
+      document.getElementById('userEmail').innerText = "No target ID found";
+    }
+
+    // ✅ STEP 4: message bhejo backend pe
+    function sendMessage() {
+      const msg = document.getElementById('messageInput').value.trim();
+
+      if (!currentEmail) {
+        alert("Email not loaded yet!");
+        return;
+      }
+
+      if (!msg) {
+        alert("Please type a message.");
+        return;
+      }
+
+      fetch('/api/insert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          useremail: currentEmail,
+          notification: msg
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Server error");
+        return res.text();
+      })
+      .then(response => {
+        alert("Message sent successfully!");
+        document.getElementById('messageInput').value = '';
+      })
+      .catch(error => {
+        alert("Failed to send message. Server error.");
+        console.error(error);
+      });
+    }
+  </script>
+</body>
+</html>

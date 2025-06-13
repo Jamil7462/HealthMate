@@ -2,14 +2,14 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.entity.AdminDis;
+import com.example.demo.dto.AdminDisDTO;
 import com.example.demo.service.FoodService;
 
 import jakarta.servlet.http.HttpSession;
@@ -19,15 +19,22 @@ import jakarta.servlet.http.HttpSession;
 public class FoodController {
 
     @Autowired
-    private FoodService fodser;
+    private FoodService foodService;
 
     @GetMapping("/solutions")
-    public ResponseEntity<List<AdminDis>> getUserSolutions(HttpSession session) {
+    public ResponseEntity<?> getUserSolutions(HttpSession session) {
         String email = (String) session.getAttribute("useremail");
+
         if (email == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(401).build(); // Unauthorized
         }
-        List<AdminDis> solutions = fodser.users(email);
-        return ResponseEntity.ok(solutions);
+
+       List<AdminDisDTO> solution = foodService.getFirstSolutionByEmail(email);
+
+        if (solution == null) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        }
+
+        return ResponseEntity.ok(solution); // 200 OK with data
     }
 }

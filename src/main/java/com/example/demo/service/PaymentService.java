@@ -37,8 +37,18 @@ public class PaymentService {
     }
 
     /* ---- latest details for UI ---- */
-    public Optional<UserPayment> getLatestPayment(String email) {
-        return paymentRepo.findTopByEmailOrderByExpiryDateDesc(email);
+    public Optional<UserPayDTO> getLatestPayment(String email) {
+        return paymentRepo.findTopByEmailOrderByExpiryDateDesc(email)
+            .map(u -> {
+                UserPayDTO ob = new UserPayDTO();
+                ob.setEmail(u.getEmail());
+                ob.setPayment(u.getPayment());
+                ob.setPaymentmethod(u.getPaymentmethod());
+                ob.setExpiryDate(u.getExpiryDate());
+                ob.setToday(u.getToday());
+                return ob;
+            });
+    }
 
     }
-}
+

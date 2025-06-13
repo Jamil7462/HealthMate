@@ -21,6 +21,8 @@ public interface PaymentRepository extends JpaRepository<UserPayment, Long> {
      * Used to decide whether the user still has an active plan.
      */
     List<UserPayment> findByEmailAndExpiryDateAfter(String email, LocalDate date);
+    
+    List<UserPayment> findByEmail(String emal);
 
     /* ---------- MOST‑RECENT PAYMENT (optional helper) ---------- */
     /**

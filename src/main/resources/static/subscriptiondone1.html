@@ -7,15 +7,47 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
             background-color: #f9f9f9;
         }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: #007bff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+
+        .navbar .brand {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            margin-left: 20px;
+            text-decoration: none;
+        }
+
+        .nav-links a:hover,
+        .nav-links .active-link {
+            text-decoration: underline;
+        }
+
         h1 {
             color: #333;
+            padding: 20px;
         }
+
         #solutionsList {
-            margin-top: 20px;
+            margin: 20px;
         }
+
         .solution {
             background-color: #fff;
             border: 1px solid #ddd;
@@ -23,29 +55,45 @@
             margin-bottom: 10px;
             border-radius: 6px;
         }
+
         .disease {
             font-weight: bold;
             font-size: 18px;
             color: #007bff;
         }
-        .foodtext, .medicinetext {
+
+        .foodtext,
+        .medicinetext {
             margin-top: 5px;
         }
     </style>
+    <!-- FontAwesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
+
+<!-- ---------- NAVBAR ---------- -->
+<div class="navbar">
+    <a href="user-home.html" class="brand">HealthMate</a>
+    <div class="nav-links">
+        <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+        <a href="payment.html" class="active-link"><i class="fas fa-credit-card"></i> Subscription</a>
+        <a href="reportpage.html"><i class="fas fa-chart-line"></i> Reports</a>
+        <a href="notificationviewsuser.html"><i class="fas fa-bell"></i> Notification</a>
+        <a href="#" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+</div>
 
 <h1>Health Solutions for Your Diseases</h1>
 
 <div id="solutionsList">Loading solutions...</div>
 
 <script>
-    // Function to fetch solutions from API
     async function fetchSolutions() {
         try {
             const response = await fetch('/api/health/solutions', {
                 method: 'GET',
-                credentials: 'include' // send cookies/session
+                credentials: 'include'
             });
 
             if (response.status === 401) {
@@ -65,7 +113,6 @@
                 return;
             }
 
-            // Build HTML to show solutions
             let html = '';
             solutions.forEach(solution => {
                 html += `
@@ -85,7 +132,6 @@
         }
     }
 
-    // Call on page load
     fetchSolutions();
 </script>
 

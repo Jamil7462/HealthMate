@@ -102,7 +102,7 @@
       <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
       <a href="payment.html"><i class="fas fa-credit-card"></i> Subscription</a>
       <a href="reportpage.html" class="active"><i class="fas fa-chart-line"></i> Reports</a>
-      <a href="#"><i class="fas fa-bell"></i> Notification</a>
+      <a href="notificationviewsuser.html"><i class="fas fa-bell"></i> Notification</a>
       <a href="signin.html" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
   </div>
@@ -116,9 +116,22 @@
       </a>
       <a href="subscriptiondone1.html" class="box">
         <img src="images/food.jpg" alt="Download Report">
-        <p> Medicine Recommendation And Food Recommendation .</p>
+        <p> Medicine Recommendation And Food Recommendation.</p>
       </a>
     </div>
   </div>
+
+  <!-- SUBSCRIPTION CHECK SCRIPT -->
+  <script>
+    fetch("http://localhost:7469/api/payment/check_subscription")
+      .then(res => {
+        if (!res.ok) {
+          window.location.href = "payment.html";
+          throw new Error("Subscription required");
+        }
+      })
+      .catch(err => console.log(err.message));
+  </script>
+
 </body>
 </html>

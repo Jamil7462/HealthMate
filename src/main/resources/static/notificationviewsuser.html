@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notification Viewer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+    }
+
+    .navbar {
+      background-color: #2c3e50;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar .brand {
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 16px;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      max-width: 600px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border: 2px solid #e91e63;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e1e90;
+      margin-bottom: 10px;
+    }
+
+    h2 i {
+      margin-left: 8px;
+      color: #fbc02d;
+    }
+
+    #userEmail {
+      text-align: center;
+      font-weight: bold;
+      color: #0066cc;
+      margin-bottom: 15px;
+    }
+
+    .noti-section-title {
+      font-weight: bold;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      color: #00695c;
+      border-left: 4px solid #009688;
+      padding-left: 10px;
+    }
+
+    .notification-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .notification-text {
+      font-size: 15px;
+      color: #444;
+    }
+
+    .notification-date {
+      font-size: 13px;
+      color: #999;
+      white-space: nowrap;
+    }
+
+    #error {
+      color: red;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="#" class="brand">HealthMate</a>
+    <div class="nav-links">
+      <a href="user-profile.html"><i class="fas fa-user"></i> Profile</a>
+      <a href="payment.html"><i class="fas fa-credit-card"></i> Subscription</a>
+      <a href="reportpage.html"><i class="fas fa-chart-line"></i> Reports</a>
+      <a href="#"><i class="fas fa-bell"></i> Notification</a>
+      <a href="signin.html" onclick="alert('Logged out successfully!')"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <h2>Your Notifications <i class="fas fa-bell"></i></h2>
+    <p id="userEmail"></p>
+    <div class="noti-section-title">Previous</div>
+    <div id="notificationList"></div>
+    <p id="error"></p>
+  </div>
+
+  <script>
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+      return date.toLocaleDateString(undefined, options);
+    }
+
+    function fetchNotifications() {
+      fetch("/api/views", {
+        method: "GET"
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("No notifications found or session expired.");
+        }
+        return response.json();
+      })
+      .then(data => {
+        const container = document.getElementById("notificationList");
+        const errorText = document.getElementById("error");
+        const emailDisplay = document.getElementById("userEmail");
+
+        container.innerHTML = "";
+        errorText.textContent = "";
+
+        if (data.length === 0) {
+          container.innerHTML += "<p>No notifications available.</p>";
+        } else {
+          emailDisplay.textContent = `Logged in as: ${data[0].useremail}`;
+          data.forEach(noti => {
+            const card = document.createElement("div");
+            card.className = "notification-card";
+
+            const left = document.createElement("div");
+            left.className = "notification-text";
+            left.textContent = noti.notification;
+
+            const right = document.createElement("div");
+            right.className = "notification-date";
+            right.textContent = formatDate(noti.date || new Date()); // fallback to now
+
+            card.appendChild(left);
+            card.appendChild(right);
+            container.appendChild(card);
+          });
+        }
+      })
+      .catch(error => {
+        document.getElementById("notificationList").innerHTML = "";
+        document.getElementById("error").textContent = error.message;
+      });
+    }
+
+    window.onload = fetchNotifications;
+  </script>
+</body>
+</html>

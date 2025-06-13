@@ -24,33 +24,42 @@ public class PaymentController {
 
     /* --------- POST /payment  (save) ---------- */
     @PostMapping("/payment")
-    public ResponseEntity<String> addPayment(@Valid @RequestBody UserPayDTO dto,
-                                             HttpSession session) {
+    public ResponseEntity<String> addPayment(@Valid @RequestBody UserPayDTO dto, HttpSession session)
+    {
 
         String email = (String) session.getAttribute("useremail");
-        if (email == null) {                       // safety check
+        service.savePayment(email, dto);
+        if (email == null) 
+        {                       // safety check
             return ResponseEntity.status(401).body("User not logged in.");
         }
-        service.savePayment(email, dto);
+        
         return ResponseEntity.ok("success");
     }
 
     /* --------- GET /check_subscription -------- */
     @GetMapping("/check_subscription")
-    public ResponseEntity<String> checkSubscription(HttpSession session) {
+    public ResponseEntity<String> checkSubscription(HttpSession session) 
+    {
         String email = (String) session.getAttribute("useremail");
-        if (email == null) {
+        if (email == null) 
+        {
             return ResponseEntity.status(401).body("User not logged in.");
         }
 
-        if (service.hasActiveSubscription(email)) {
+        if (service.hasActiveSubscription(email)) 
+        {
             return ResponseEntity.ok("You already have an active subscription.");
-        } else {
+        } 
+        else 
+        	
+        {
             return ResponseEntity.status(400).body("No active subscription found.");
         }
     }
 
     /* --------- GET /info  (latest payment) ---- */
+ // --- Controller Layer ---
     @GetMapping("/info")
     public ResponseEntity<?> subscriptionInfo(HttpSession session) {
         String email = (String) session.getAttribute("useremail");
@@ -58,8 +67,9 @@ public class PaymentController {
             return ResponseEntity.status(401).body("User not logged in.");
         }
 
-        Optional<UserPayment> opt = service.getLatestPayment(email);
-        return opt.<ResponseEntity<?>>map(ResponseEntity::ok)
-                  .orElseGet(() -> ResponseEntity.status(404).body("No payment record found."));
+        return service.getLatestPayment(email)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).body("No payment record found."));
     }
+
 }
